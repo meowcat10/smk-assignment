@@ -1,16 +1,17 @@
-import { createWebHistory, createRouter } from 'vue-router'
+import { createRouter, createWebHistory } from 'vue-router'
 
-// import HomeView from './HomeView.vue'
-// import AboutView from './AboutView.vue'
+import Banner from '@/components/Banner.vue'
 
-// const routes = [
-//   { path: '/', component:  },
+const routes = [
+  { path: '/', component:  Banner}
 //   { path: '/about', component:  },
-// ]
+]
 
 
 
-// export const router = createRouter({
-//   history: createWebHistory(),
-//   routes,
-// })
+export const router = createRouter({
+  history: createWebHistory(),
+  routes,
+})
+
+export default router
