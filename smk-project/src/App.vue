@@ -1,27 +1,27 @@
-<script>
-export default {
-   name: '',
-   components: {
-   },
-   data() {
-      return {
-      }
+    <script>
+    export default {
+    name: '',
+    components: {
     },
-   props: {
-   },
-   computed: {
-   },
-   methods: {
-   },
-   watch: {
-   },
-   emits: [
-   ],
-}
-</script>
+    data() {
+        return {
+            
+        }
+        },
+    props: {
+    },
+    computed: {
+    },
+    methods: {
+    },
+    watch: {
+    },
+    emits: [
+    ],
+    }
+    </script>
 
-<template>
-    
-</template>
+    <template>
+    </template>
 
-<style scoped></style>
+    <style scoped></style>
