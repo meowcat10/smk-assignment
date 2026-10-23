@@ -16,6 +16,9 @@
     computed: {
     },
     methods: {
+        handleCategoryChange(category){
+            console.log("New Category: "+category);
+        }
     },
     watch: {
     },
@@ -25,7 +28,8 @@
     </script>
 
     <template>
-        <Banner/>
+        <Banner @category-change="handleCategoryChange"/>
+        
     </template>
 
     <style scoped></style>

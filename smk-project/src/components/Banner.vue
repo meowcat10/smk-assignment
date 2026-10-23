@@ -14,11 +14,14 @@
     computed: {
     },
     methods: {
+        selectedCategory(category){
+            this.currentCategory = category; // Updates category (based on click)
+            this.$emit('category-change', category); // Sends new category to parent
+        }
     },
     watch: {
     },
-    emits: [
-    ],
+    emits: ['category-change'],
 }
 </script>
 
@@ -31,15 +34,16 @@
         <!-- '@Click' will change current... to button text -->
         <button
             :class="{selected : currentCategory ==='Stue'}"
-            @click="currentCategory = 'Stue'"
+            @click="selectedCategory('Stue')"
+            
             >Stue</button>
         <button
             :class="{selected : currentCategory === '1. Etage'}"
-            @click="currentCategory = '1. Etage'"
+            @click="selectedCategory('1. Etage')"
             >1. Etage</button>
         <button
             :class="{selected : currentCategory === '2. Etage'}"
-            @click="currentCategory = '2. Etage'"
+            @click="selectedCategory('2. Etage')"
             >2. Etage</button>
     </div>
 </template>
