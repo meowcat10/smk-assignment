@@ -1,4 +1,10 @@
+/* Global variables */
+/* Can be accessed across all components */
 
+:root{
+    --primaryColor:#2231; /* Example */
+
+}
 
 * {
     font-family: 'Hill SMK', sans-serif;
