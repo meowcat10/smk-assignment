@@ -5,7 +5,7 @@
     },
     data() {
         return {
-            currentCategory:'Stue',
+            currentCategory:'Stue', // Default
 
         }
     },
@@ -27,6 +27,8 @@
         <img src="./icons/smk-logo.png" alt ="Logo" width="125px">
     </header>
     <div class="buttonRow">
+        <!-- Added class "selected" when current... is matching button text -->
+        <!-- '@Click' will change current... to button text -->
         <button
             :class="{selected : currentCategory ==='Stue'}"
             @click="currentCategory = 'Stue'"
@@ -63,6 +65,7 @@
             outline:none;
         }
 
+        /* Style for when BUTTON is active */
         .selected{
             background:black;
             color:white;
