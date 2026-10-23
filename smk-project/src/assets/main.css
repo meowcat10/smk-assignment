@@ -9,7 +9,13 @@
 
     /* -- FRONT.VUE --  */
     --headerHeight:clamp(70px, 10%, 100px);
-    --headerPadding:16px;
+    --headerPadding:12px;
+    /* Buttons */
+        --buttonPadding:12px;
+        --buttonGap:12px;
+        --buttonWidth:100px;
+
+
 }
 
 #app{
