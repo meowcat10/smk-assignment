@@ -23,7 +23,7 @@
 
 <template>
     <header>
-        <img src="./icons/smk-logo.png" alt ="Logo" width="125px">
+        <img src="./Images/icons/smk-logo.png" alt ="Logo" width="125px">
     </header>
     
 </template>
