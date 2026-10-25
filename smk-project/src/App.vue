@@ -1,10 +1,11 @@
     <script>
     import { RouterLink, RouterView } from 'vue-router'
     import Banner from './components/Banner.vue';
+    import Navigation from './components/Navigation.vue';
     export default {
     name: '',
     components: {
-        Banner,
+        Banner, Navigation
     },
     data() {
         return {
@@ -16,9 +17,7 @@
     computed: {
     },
     methods: {
-        handleCategoryChange(category){
-            console.log("New Category: "+category);
-        }
+     
     },
     watch: {
     },
@@ -28,7 +27,7 @@
     </script>
 
     <template>
-        <Banner @category-change="handleCategoryChange"/>
+        <Navigation />
         
     </template>
 
