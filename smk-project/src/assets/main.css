@@ -15,7 +15,11 @@
     /* Buttons */
         --buttonPadding:12px;
         --buttonGap:12px;
-        --buttonWidth:100px;
+        --buttonWidth:118px; /* Width : Taken from Figma prototype */
+        --buttonHeight:45px; /* Height : Taken from Figma prototype */
+
+    /* -- FRONTPAGE.VUE -- */
+        --pageWidth:80%;
 
 
 }

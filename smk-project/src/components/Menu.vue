@@ -32,7 +32,6 @@ export default {
         <button
             :class="{selected : currentCategory ==='Stue'}"
             @click="selectedCategory('Stue')"
-            
             >Stue</button>
         <button
             :class="{selected : currentCategory === '1. Etage'}"
@@ -48,11 +47,13 @@ export default {
 <style scoped>
     .buttonRow{
         display:flex;
+        width:100%;
         gap:var(--buttonGap);
         padding:var(--buttonPadding);
         button{
             padding:var(--buttonPadding);
             width:var(--buttonWidth);
+            height:var(--buttonHeight);
             border:2px solid black;
             outline:none;
         }
