@@ -1,16 +1,17 @@
     <script>
     import { RouterLink, RouterView } from 'vue-router'
     import Banner from './components/Banner.vue';
+    import Menu from './components/Menu.vue';
     export default {
     name: '',
     components: {
-        Banner,
+        Banner, Menu
     },
     data() {
         return {
-            
+
         }
-        },
+    },
     props: {
     },
     computed: {
@@ -28,7 +29,8 @@
     </script>
 
     <template>
-        <Banner @category-change="handleCategoryChange"/>
+        <Banner/>
+        <Menu @category-change="handleCategoryChange"/>
         
     </template>
 
