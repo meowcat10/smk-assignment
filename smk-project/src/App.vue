@@ -30,7 +30,8 @@
 
     <template>
         <Banner/>
-        <Menu @category-change="handleCategoryChange"/>
+        <Menu v-if="$route.path === '/'" @category-change="handleCategoryChange"/>
+        <RouterView/>
         
     </template>
 
