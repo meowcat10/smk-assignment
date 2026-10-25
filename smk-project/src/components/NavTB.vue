@@ -24,8 +24,21 @@
    
     <template>
       <navheadertekst><h1>Find vej</h1></navheadertekst>
-      <img src="">
+      <kort><img class="kort" src="./Images/kort.svg"></kort>
       
     </template>
 
-    <style scoped></style>
+    <style>
+    .h1tekst {
+        height: 82px;
+        width: 100%;
+        font-family: Hill;
+        font-weight: bold;
+    }
+
+    .kort {
+        height: 337px;
+        width: 374px;
+    }
+
+    </style>
