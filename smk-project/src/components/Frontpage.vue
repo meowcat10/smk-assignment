@@ -28,7 +28,7 @@ export default {
     <div class="pageContent">
         <div class = "text">
             <h2>Vælg et lokale</h2>
-            <p>Vælg et lokale at navigere til eller vælg at se udstilingslisten, hvor du kan få oplæsning og mere info</p>
+            <p>Vælg et lokale at navigere til eller vælg at se en liste af værkerne, hvor du kan få oplæsning og mere info</p>
         </div>
         <div id="map"></div>
         <div class = "btnRow">
