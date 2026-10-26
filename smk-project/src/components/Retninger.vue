@@ -29,7 +29,7 @@
       <retning class="retning"><img src="./Images/icons/mappoint.svg"><p>Du er nu ankommet til rum 211</p></retning>
 
       <button
-      class="navbutton">Start map navigation</button>
+      class="navbutton"><img src="./Images/icons/mappointthin.svg">Start navigation</button>
       
     </template>
 
