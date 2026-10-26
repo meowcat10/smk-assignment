@@ -30,6 +30,8 @@ body {
     padding:0; 
 }
 
+/* Import Hill and different font weights so we can use smks font */
+
 * {
     font-family: Hill;
     line-height: 100%;
@@ -50,7 +52,7 @@ body {
 @font-face {
     font-family: Hill;
     src: url(./fonts/HillSMKNormal-Italic.ttf);
-    font-weight: italic;
+    font-style: italic;
 }
 
 @font-face {

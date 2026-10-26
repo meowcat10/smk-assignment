@@ -23,17 +23,23 @@
     </script>
    
     <template>
-      <navheadertekst><h1>Find vej</h1></navheadertekst>
+      <navheadertekst class="h1tekst"><h1>Find vej</h1></navheadertekst>
       <kort><img class="kort" src="./Images/kort.svg"></kort>
       
     </template>
 
     <style>
+
+    h1 {
+        margin: 0;
+    }
+
     .h1tekst {
         height: 82px;
-        width: 100%;
+        width: 300px;
         font-family: Hill;
         font-weight: bold;
+        padding-bottom: 10px;
     }
 
     .kort {

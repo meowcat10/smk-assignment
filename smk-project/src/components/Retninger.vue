@@ -28,7 +28,8 @@
       <retning class="retning"><img src="./Images/icons/rightarrow.svg"><p>Gå til højer og fortsæt ligeud i 10 meter</p></retning>
       <retning class="retning"><img src="./Images/icons/mappoint.svg"><p>Du er nu ankommet til rum 211</p></retning>
 
-      <button class="navbutton">Start map navigation</button>
+      <button
+      class="navbutton">Start map navigation</button>
       
     </template>
 
@@ -48,6 +49,7 @@
     }
 
     .navbutton {
+        cursor: pointer;
         margin-top: 20px;
         border: 4px;
         border-style: solid;

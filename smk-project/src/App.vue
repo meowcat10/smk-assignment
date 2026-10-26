@@ -1,12 +1,11 @@
     <script>
     import { RouterLink, RouterView } from 'vue-router'
     import Banner from './components/Banner.vue';
-    import Navigation from './components/Navigation.vue';
-    import Menu from './components/Menu.vue';
+    import Kunstvaerk from './components/Kunstvaerk.vue';
     export default {
     name: '',
     components: {
-        Banner, Menu, Navigation
+        Banner, Kunstvaerk
     },
     data() {
         return {
@@ -29,7 +28,8 @@
 
     <template>
          <Banner/>
-        <Navigation />
+         <Kunstvaerk></Kunstvaerk>
+        
         
     </template>
 
