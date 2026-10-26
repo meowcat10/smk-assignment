@@ -15,18 +15,23 @@
     /* Buttons */
         --buttonPadding:12px;
         --buttonGap:12px;
-        --buttonWidth:118px; /* Width : Taken from Figma prototype */
-        --buttonHeight:45px; /* Height : Taken from Figma prototype */
+        --buttonText_menu:18px;
+        --buttonWidth_menu:118px; /* Width : Taken from Figma prototype */
+        --buttonHeight_menu:45px; /* Height : Taken from Figma prototype */
 
     /* -- FRONTPAGE.VUE -- */
         --pageWidth:80%;
+        --buttonWidth_front:300px;
+        --buttonHeight_front:50px;
+        --buttonText_front:24px;
 
-
+        --mapWidth:374px;
+        --mapHeight:337px;
 }
 
 #app{
-    width:100dvw;
-    height:100dvh;
+    width:min(100dvw) !important;
+    height:min(100dvh) !important;
 }
 
 body { 

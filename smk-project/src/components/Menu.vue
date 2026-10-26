@@ -47,15 +47,18 @@ export default {
 <style scoped>
     .buttonRow{
         display:flex;
+        justify-content: center;
         width:100%;
         gap:var(--buttonGap);
         padding:var(--buttonPadding);
         button{
             padding:var(--buttonPadding);
-            width:var(--buttonWidth);
-            height:var(--buttonHeight);
+            width:var(--buttonWidth_menu);
+            height:var(--buttonHeight_menu);
             border:2px solid black;
+            font-size:var(--buttonText_menu);
             outline:none;
+            background:transparent;
         }
 
         /* Style for when BUTTON is active */

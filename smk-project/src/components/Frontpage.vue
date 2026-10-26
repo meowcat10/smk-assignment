@@ -31,45 +31,52 @@ export default {
             <p>Vælg et lokale at navigere til eller vælg at se udstilingslisten, hvor du kan få oplæsning og mere info</p>
         </div>
         <div id="map"></div>
-        <button @click="btnClick('Navigation')">Navigation</button>
-        <button @click="btnClick('Liste af udstillinger')">Liste af udstillinger</button>
+        <div class = "btnRow">
+            <button @click="btnClick('Navigation')">Navigation</button>
+            <button @click="btnClick('Liste af udstillinger')">Liste af udstillinger</button>
+        </div>
     </div>
 </template>
 
 <style scoped>
     .pageContent{
+        width:100%;
+        height:100%;
         display:flex;
-        flex-direction: column;
-        align-items: center;
         justify-content: center;
-        text-align: center;
-
-        * {
+        align-items: center;
+        flex-direction:column;
+        gap:var(--buttonGap);
+        padding:var(--buttonPadding);
+        .text{
+            h2{ font-size:32px; margin:0;}
+            p{ font-size:18px; margin-top:5px;}
+            
+            text-align: center;
+        }
+        
+        .btnRow{
+            button{
+                width:var(--buttonWidth_front);
+                height:var(--buttonHeight_front);
+                background:transparent;
+                outline:none;
+                font-weight:600;
+                font-size:var(--buttonText_front);
+                border:4px solid black;
+            }
             display:flex;
+            gap:var(--buttonGap);
             justify-content: center;
-            align-items: center;
-            flex-direction:column;
-            margin:6px;
-            width:var(--pageWidth) !important; /* Forces content to stay within specified range */
+            flex-direction: column;    
         }
 
-        button{
-            padding:var(--buttonPadding);
-            border:2px solid black;
-            outline:none;
-        }
-
-        #map{ 
-            /* Example */
-            height:250px;
+        #map{
+            width:var(--mapWidth);
+            height:var(--mapHeight);
             background:grey;
         }
-    
-
-       
     }
-
-
     
 
 </style>

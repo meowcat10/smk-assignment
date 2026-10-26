@@ -1,9 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Banner from '@/components/Banner.vue'
+import Frontpage from '@/components/Frontpage.vue'
 
 const routes = [
-    { path: '/', component: Banner}
+    { path: '/', component: Frontpage}
 //   { path: '/about', component:  },
 ]
 
