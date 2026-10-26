@@ -32,8 +32,14 @@ export default {
         </div>
         <div id="map"></div>
         <div class = "btnRow">
-            <button @click="btnClick('Navigation')">Navigation</button>
-            <button @click="btnClick('Liste af udstillinger')">Liste af udstillinger</button>
+            <button @click="btnClick('Navigation')">
+                <img src="./Images/icons/nav.png">
+                Navigation
+            </button>
+            <button @click="btnClick('Liste af værker')">
+                <img src="./Images/icons/Vector.png">
+                Liste af værker
+            </button>
         </div>
     </div>
 </template>
@@ -49,14 +55,18 @@ export default {
         gap:var(--buttonGap);
         padding:var(--buttonPadding);
         .text{
-            h2{ font-size:32px; margin:0;}
-            p{ font-size:18px; margin-top:5px;}
+            h2 { font-size:32px; margin:0; }
+            p { font-size:18px; margin-top:5px; }
             
             text-align: center;
         }
         
         .btnRow{
             button{
+                display:flex;
+                justify-content: center;
+                align-items: center;
+                gap:6px;
                 width:var(--buttonWidth_front);
                 height:var(--buttonHeight_front);
                 background:transparent;
@@ -64,6 +74,10 @@ export default {
                 font-weight:600;
                 font-size:var(--buttonText_front);
                 border:4px solid black;
+                img{
+                    width:20px;
+                    height:auto;
+                }
             }
             display:flex;
             gap:var(--buttonGap);
@@ -77,6 +91,5 @@ export default {
             background:grey;
         }
     }
-    
 
 </style>
