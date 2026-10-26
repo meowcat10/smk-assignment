@@ -38,11 +38,14 @@
         display: flex;
         align-items: center;
         text-align: center;
-        height: 82px;
+        height: auto;
         width: 300px;
         font-family: Hill;
         font-weight: bold;
-        padding-bottom: 10px;
+        padding-top: 20px;
+        padding-bottom: 20px;
+        justify-content: center;
+
     }
 
     .kunstb {
