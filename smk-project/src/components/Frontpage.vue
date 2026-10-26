@@ -1,45 +1,48 @@
 <script>
+import { RouterLink } from 'vue-router';
+import Menu from './Menu.vue';
+
 export default {
     name: '',
     components: {
-    },
-    data() {
-        return {
-
-        }
-    },
-    props: {
-    },
-    computed: {
+        Menu,
+        RouterLink,
     },
     methods: {
-        btnClick(btn_text){
-            // Sends btn-event -> parent
-            this.$emit('btnClick', btn_text);
+        handleCategoryChange(category){
+            console.log("New Category: "+category);
+        },
+        roomClick(){
+            const room = document.querySelector('.roomExample');
+            if (room.classList.contains('roomClicked')){
+                room.classList.remove('roomClicked');
+            } else {
+                room.classList.add('roomClicked');
+            }
         }
     },
-    watch: {
-    },
-    emits: ['btnClick'],
 }
 </script>
 
 <template>
+    <Menu @category-change="handleCategoryChange"/>
     <div class="pageContent">
         <div class = "text">
             <h2>Vælg et lokale</h2>
             <p>Vælg et lokale at navigere til eller vælg at se en liste af værkerne, hvor du kan få oplæsning og mere info</p>
         </div>
-        <div id="map"></div>
+        <div id="map">
+            <div class="roomExample" @click="roomClick()"></div>
+        </div>
         <div class = "btnRow">
-            <button @click="btnClick('Navigation')">
+            <RouterLink to="/navigation">
                 <img src="./Images/icons/nav.png">
                 Navigation
-            </button>
-            <button @click="btnClick('Liste af værker')">
+            </RouterLink>
+            <RouterLink to="/listeafvaerker">
                 <img src="./Images/icons/Vector.png">
                 Liste af værker
-            </button>
+            </RouterLink>
         </div>
     </div>
 </template>
@@ -62,7 +65,7 @@ export default {
         }
         
         .btnRow{
-            button{
+            a{
                 display:flex;
                 justify-content: center;
                 align-items: center;
@@ -74,6 +77,8 @@ export default {
                 font-weight:600;
                 font-size:var(--buttonText_front);
                 border:4px solid black;
+                color:inherit;
+                text-decoration:none;
                 img{
                     width:20px;
                     height:auto;
@@ -89,6 +94,20 @@ export default {
             width:var(--mapWidth);
             height:var(--mapHeight);
             background:grey;
+            display:flex;
+            justify-content: end;
+            align-items: flex-end;
+
+            .roomExample{             
+                width:30%;
+                margin:5px;
+                height:30%;
+                background:black;
+
+            }
+            .roomClicked{
+                background:rgb(229, 172, 223);
+            }
         }
     }
 
