@@ -39,8 +39,34 @@ body {
     padding:0; 
 }
 
+/* Import Hill and different font weights so we can use smks font */
+
 * {
-    font-family: 'Hill SMK', sans-serif;
+    font-family: Hill;
+    line-height: 100%;
+}
+
+@font-face {
+    font-family: Hill;
+    src: url(./fonts/HillSMKNormal-Bold.ttf);
+    font-weight: bold;
+}
+
+@font-face {
+    font-family: Hill;
+    src: url(./fonts/HillSMKNormal-DemiBold.ttf);
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: Hill;
+    src: url(./fonts/HillSMKNormal-Italic.ttf);
+    font-style: italic;
+}
+
+@font-face {
+    font-family: Hill;
+    src: url(./fonts/HillSMKNormal-Regular.ttf);
 }
 
 
