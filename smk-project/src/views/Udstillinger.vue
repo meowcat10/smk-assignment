@@ -3,8 +3,12 @@
 import useUs from '@/components/Images/icons/use-us-udstilling.jpg';
 import callCenter from '@/components/Images/icons/call-center-udstilling.jpg';
 import unshore from '@/components/Images/icons/unshore-udstilling.jpg';
+import ExhibitionCard from '@/components/ExhibitionCard.vue';
 export default {
     name: 'Udstillinger',
+    components: {
+        ExhibitionCard,
+    },
     data() {
         return {
             search: '', // What the user types in the search field
@@ -42,12 +46,14 @@ export default {
     </div>
 
     <div class="grid">
-        <!-- Makes one box for each exhibition in the list (:key = the id) -->
-        <div v-for="exhibition in filteredExhibitions" :key="exhibition.id">
-            <!-- ':' = gets the value from data -->
-            <img :src="exhibition.image" :alt="exhibition.title">
-            <p>{{ exhibition.title }}</p>
-        </div>
+        <!-- Makes one card for each exhibition in the list (:key = the id) -->
+        <!-- title and image are sent to the card as props -->
+        <ExhibitionCard
+            v-for="exhibition in filteredExhibitions"
+            :key="exhibition.id"
+            :title="exhibition.title"
+            :image="exhibition.image"
+        />
     </div>
 </template>
 
@@ -81,17 +87,5 @@ export default {
         grid-template-columns:1fr 1fr; /* 2 columns with the same width */
         gap:var(--headerPadding);
         padding:0 var(--headerPadding);
-    }
-
-    .grid img{
-        width:100%;
-        aspect-ratio:1 / 1; /* Makes the image square */
-        object-fit:cover; /* Crops the image instead of stretching it */
-    }
-
-    .grid p{
-        margin:4px 0 0;
-        text-align:center;
-        font-size:18px;
     }
 </style>
