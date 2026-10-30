@@ -1,7 +1,7 @@
  <script>
     import { RouterLink, RouterView } from 'vue-router'
-import NavTB from './NavTB.vue';
-import Retninger from './Retninger.vue';
+    import NavTB from './NavTB.vue';
+    import Retninger from './Retninger.vue';
     export default {
     name: '',
     components: {
@@ -27,9 +27,9 @@ import Retninger from './Retninger.vue';
    
     <template>
     <nav class="nav"> 
-      <NavTB></NavTB> 
+      <NavTB/> 
       <linje class="linje"></linje>
-      <Retninger></Retninger>
+      <Retninger/>
     </nav>
       
     </template>

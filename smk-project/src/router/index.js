@@ -1,10 +1,18 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import Banner from '@/components/Banner.vue'
+import Frontpage from '@/components/Frontpage.vue'
+import Navigation from '@/components/Navigation.vue'
+import Udstillinger from '@/components/Udstillinger.vue'
+import Kunstvaerk from '@/components/Kunstvaerk.vue'
+import KunstvaerkerAdmin from '@/components/KunstvaerkerAdmin.vue'
 
 const routes = [
-    { path: '/', component: Banner}
-//   { path: '/about', component:  },
+    { path: '/', component: Frontpage },
+    { path: '/navigation', component:  Navigation}, 
+    { path: '/listeafvaerker', component: Udstillinger},
+    { path: '/kunstvaerk', component: Kunstvaerk},
+    { path: '/kunstvaerk/:id', component: Kunstvaerk},
+    { path: '/kunstvaerker', component: KunstvaerkerAdmin},
 ]
 
 

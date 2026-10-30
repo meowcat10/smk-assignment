@@ -1,38 +1,19 @@
-    <script>
-    import { RouterLink, RouterView } from 'vue-router'
-    import Banner from './components/Banner.vue';
-    import Kunstvaerk from './components/Kunstvaerk.vue';
-import Navigation from './components/Navigation.vue';
-    export default {
-    name: '',
+<script>
+import { RouterView } from 'vue-router'
+import Banner from './components/Banner.vue'
+
+export default {
     components: {
-        Banner, Kunstvaerk, Navigation
+        Banner,
+        RouterView,
     },
-    data() {
-        return {
+}
+</script>
 
-        }
-    },
-    props: {
-    },
-    computed: {
-    },
-    methods: {
-     
-    },
-    watch: {
-    },
-    emits: [
-    ],
-    }
-    </script>
+<template>
+    <Banner @goBack="$router.push('/')" />
+    <RouterView />
+</template>
 
-    <template>
-         <Banner/>
-         <Kunstvaerk></Kunstvaerk>
-         <Navigation></Navigation>
-        
-        
-    </template>
-
-    <style scoped></style>
+<style scoped>
+</style>
