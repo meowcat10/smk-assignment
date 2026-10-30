@@ -1,87 +1,80 @@
 <script>
-    import { RouterLink, RouterView } from 'vue-router'
-    export default {
-    name: '',
-    components: {
-    },
-    data() {
-        return {
-            
-        }
-        },
+export default {
+    name: 'Omkunst',
     props: {
+        artwork: {
+            type: Object,
+            required: true,
+        },
+        isSpeaking: {
+            type: Boolean,
+            default: false,
+        },
     },
-    computed: {
-    },
-    methods: {
-    },
-    watch: {
-    },
-    emits: [
-    ],
-    }
-    </script>
-   
-    <template>
+    emits: ['toggle-read-aloud'],
+}
+</script>
 
-      <button type="button"
-      class="navbutton"><img src="./Images/icons/Headset.svg">Få teksten læst højt</button>
-      
-        <h2 class="kunsttitel">Mere om Landskab i italiensk manér</h2>
-        <p class="aartig">Årtig: 1745 – 1786</p>
-        <p class="omtekst">Malleriet Landskab i italiensk manér blev lavet i 1745-1786 af Johan Mandelberg, dette ved vi da Johan levede fra 1730-1786,
-            så malleriet kunne ikke være lavet efter 1786. Malleriets teknik er olie på træ og bruger mest brune toner.
-        </p>
-      
-      
-    </template>
+<template>
+    <button
+        class="navbutton"
+        type="button"
+        :aria-pressed="isSpeaking"
+        @click="$emit('toggle-read-aloud')"
+    >
+        <img src="./Images/icons/Headset.svg" alt="">
+        {{ isSpeaking ? 'Stop oplæsning' : 'Få teksten læst højt' }}
+    </button>
+    <h2 class="kunsttitel">Mere om {{ artwork.title }}</h2>
+    <p v-if="artwork.artwork_year" class="aartig">Årstal: {{ artwork.artwork_year }}</p>
+    <p v-if="artwork.description" class="omtekst">{{ artwork.description }}</p>
+</template>
 
-    <style>
+<style scoped>
+.kunsttitel {
+    width: min(350px, 100%);
+    min-height: 64px;
+    margin: 0;
+    font-size: 24px;
+    font-weight: 600;
+    text-align: center;
+}
 
-    .kunsttitel {
-        text-align: center;
-         font-weight: 600;
-        font-size: 24px;
-        height: 64px;
-        width: 350px;
-    }
+.aartig {
+    margin: 0;
+    font-family: hill;
+    font-style: italic;
+    font-size: 16px;
+    text-decoration: underline;
+}
 
-    .aartig {
-        font-family: hill;
-        font-style: italic;
-        font-size: 16px;
-        text-decoration: underline;
-    }
+.omtekst {
+    width: min(350px, 100%);
+    margin: 10px 0 0;
+    font-family: hill;
+    font-size: 18px;
+    text-align: center;
+}
 
-    .omtekst {
-         margin-top: 10px;
-         text-align: center;
-        width: 350px;
-        font-family: hill;
-        font-size: 18px;
-    }
+.navbutton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: min(300px, 100%);
+    box-sizing: border-box;
+    height: 50px;
+    margin: 20px 0;
+    border: 4px solid black;
+    background: transparent;
+    font: inherit;
+    font-size: 24px;
+    font-weight: 600;
+    cursor: pointer;
+}
 
-    .navbutton {
-        cursor: pointer;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        gap: 10px;
-        margin-top: 20px;
-        border: 4px;
-        border-style: solid;
-        border-color: black;
-        width: 300px;
-        height: 50px;
-        background-color: transparent;
-        font-family: hill;
-        font-weight: 600;
-        font-size: 24px;
-        margin-bottom: 20px;
-    }
-    
-    * {
-        margin: 0;
-    }
-
-    </style>
+.navbutton img {
+    width: 30px;
+    height: 30px;
+}
+</style>

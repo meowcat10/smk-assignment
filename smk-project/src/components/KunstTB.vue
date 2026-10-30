@@ -1,32 +1,24 @@
 <script>
-    import { RouterLink, RouterView } from 'vue-router'
-    export default {
-    name: '',
-    components: {
-    },
-    data() {
-        return {
-            
-        }
-        },
+export default {
+    name: 'KunstTB',
     props: {
+        artwork: {
+            type: Object,
+            required: true,
+        },
     },
-    computed: {
-    },
-    methods: {
-    },
-    watch: {
-    },
-    emits: [
-    ],
-    }
-    </script>
+}
+</script>
    
-    <template>
-      <navheadertekst class="h1tekst"><h1>Landskab i italiensk manér</h1></navheadertekst>
-      <kunst><img class="kunstb" src="./Images/johanmandelberglandskab.jpg"></kunst>
-      
+<template>
+    <template v-if="artwork">
+        <navheadertekst class="h1tekst"><h1>{{ artwork.title }}</h1></navheadertekst>
+        <kunstner v-if="artwork.artist" class="omkunstner">{{ artwork.artist }}</kunstner>
+        <kunst v-if="artwork.image_url">
+            <img class="kunstb" :src="artwork.image_url" :alt="artwork.title">
+        </kunst>
     </template>
+</template>
 
     <style>
 
@@ -43,7 +35,6 @@
         font-family: Hill;
         font-weight: bold;
         padding-top: 20px;
-        padding-bottom: 20px;
         justify-content: center;
 
     }
@@ -51,8 +42,17 @@
     .kunstb {
         display: block;
         height: 337px;
-        width: 374px;
+        width: min(374px, 80%);
         object-fit: cover;
     }
 
-    </style>
+     .omkunstner {
+         margin-top: 10px;
+         text-align: center;
+        width: 350px;
+        font-family: hill;
+        font-size: 18px;
+        padding-bottom: 20px;
+    }
+
+</style>

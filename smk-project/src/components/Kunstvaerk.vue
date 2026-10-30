@@ -1,8 +1,13 @@
 <script>
-import Headset from './Images/icons/Headset.svg'
+import KunstTB from './KunstTB.vue';
+import Omkunst from './omkunst.vue'
 
 export default {
     name: 'Kunstvaerk',
+    components: {
+        KunstTB,
+        Omkunst,
+    },
     data() {
         return {
             artwork: null,
@@ -10,7 +15,6 @@ export default {
             error: '',
             speechError: '',
             isSpeaking: false,
-            Headset,
         }
     },
     watch: {
@@ -107,22 +111,13 @@ export default {
         <p v-else-if="error" class="error" role="alert">{{ error }}</p>
         <template v-else-if="artwork">
             <section class="artwork-information">
-                <h1>{{ artwork.title }}</h1>
-                <img v-if="artwork.image_url" :src="artwork.image_url" :alt="artwork.title">
-                <h2 class="artwork-subtitle">Mere om {{ artwork.title }}</h2>
-                <p v-if="artwork.artist" class="artwork-artist">{{ artwork.artist }}</p>
-                <p v-if="artwork.artwork_year" class="artwork-year">Årstal: {{ artwork.artwork_year }}</p>
-                <p v-if="artwork.description" class="artwork-description">{{ artwork.description }}</p>
+                <KunstTB :artwork="artwork" />
+                <Omkunst
+                    :artwork="artwork"
+                    :is-speaking="isSpeaking"
+                    @toggle-read-aloud="toggleReadAloud"
+                />
             </section>
-            <button
-                class="read-aloud-button"
-                type="button"
-                :aria-pressed="isSpeaking"
-                @click="toggleReadAloud"
-            >
-                <img :src="Headset" alt="">
-                {{ isSpeaking ? 'Stop oplæsning' : 'Få teksten læst højt' }}
-            </button>
             <p v-if="speechError" class="error" role="alert">{{ speechError }}</p>
         </template>
     </main>
@@ -164,54 +159,6 @@ export default {
 
 .artwork-information p {
     margin: 0;
-}
-
-.artwork-subtitle {
-    width: min(350px, 100%);
-    min-height: 64px;
-    margin: 0;
-    font-size: 24px;
-    font-weight: 600;
-    text-align: center;
-}
-
-.artwork-artist,
-.artwork-description {
-    width: min(350px, 100%);
-    font-size: 18px;
-    text-align: center;
-}
-
-.artwork-year {
-    font-size: 16px;
-    font-style: italic;
-    text-decoration: underline;
-}
-
-.artwork-information .artwork-description {
-    margin-top: 10px;
-}
-
-.read-aloud-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    width: min(300px, 100%);
-    box-sizing: border-box;
-    height: 50px;
-    border: 4px solid black;
-    background: transparent;
-    font: inherit;
-    font-size: 24px;
-    font-weight: 600;
-    margin: 20px 0;
-    cursor: pointer;
-}
-
-.read-aloud-button img {
-    width: 24px;
-    height: 24px;
 }
 
 .error {
