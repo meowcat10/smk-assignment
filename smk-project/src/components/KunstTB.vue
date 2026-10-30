@@ -13,7 +13,7 @@ export default {
 <template>
     <template v-if="artwork">
         <navheadertekst class="h1tekst"><h1>{{ artwork.title }}</h1></navheadertekst>
-        <kunstner v-if="artwork.artist" class="omkunstner">{{ artwork.artist }}</kunstner>
+        <kunstner v-if="artwork.artist" class="omkunstner"><p>Lavet af {{ artwork.artist }}</p></kunstner>
         <kunst v-if="artwork.image_url">
             <img class="kunstb" :src="artwork.image_url" :alt="artwork.title">
         </kunst>
