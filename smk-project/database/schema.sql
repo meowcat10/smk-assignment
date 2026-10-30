@@ -1,0 +1,16 @@
+CREATE DATABASE IF NOT EXISTS smk_project
+    CHARACTER SET utf8mb4
+    COLLATE utf8mb4_unicode_ci;
+
+USE smk_project;
+
+CREATE TABLE IF NOT EXISTS artworks (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    title VARCHAR(255) NOT NULL,
+    artist VARCHAR(255) NULL,
+    artwork_year SMALLINT UNSIGNED NULL,
+    description TEXT NULL,
+    image_url VARCHAR(2048) NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (id)
+) ENGINE=InnoDB;

@@ -1,27 +1,22 @@
 <script>
-// Imports the images so we can use them in the data below
-import useUs from '@/components/Images/icons/use-us-udstilling.jpg';
-import callCenter from '@/components/Images/icons/call-center-udstilling.jpg';
-import unshore from '@/components/Images/icons/unshore-udstilling.jpg';
+import { RouterLink } from 'vue-router';
 import ExhibitionCard from '@/components/ExhibitionCard.vue';
-import Johan from '@/components/Images/johanmandelberglandskab.jpg';
 export default {
     name: 'Udstillinger',
     components: {
         ExhibitionCard,
+        RouterLink,
     },
     data() {
         return {
             search: '', // What the user types in the search field
-
-            // Dummy data 
-            exhibitions: [
-                { id: 1, title: 'Use Us', image: useUs },
-                { id: 2, title: 'Call Center', image: callCenter },
-                { id: 3, title: 'Unshore', image: unshore },
-                { id: 4, title: 'Landskab i italiensk manér', image: Johan, to: '/kunstvaerk' }
-            ],
+            artworks: [],
+            loading: true,
+            error: '',
         }
+    },
+    mounted() {
+        this.loadArtworks()
     },
     computed: {
         // Only shows the exhibitions that match the search (updates when 'search' changes)
@@ -29,10 +24,28 @@ export default {
             // filter = keeps the exhibitions where the answer is true
             // includes = checks if the title contains the search text
             // toLowerCase = makes everything small letters, so it works with both big and small letters
-            return this.exhibitions.filter(exhibition =>
+            return this.artworks.filter(exhibition =>
                 exhibition.title.toLowerCase().includes(this.search.toLowerCase())
             );
         }
+    },
+    methods: {
+        async loadArtworks() {
+            this.loading = true
+            this.error = ''
+            try {
+                const response = await fetch('/api/kunstvaerker')
+                if (!response.ok) {
+                    const result = await response.json().catch(() => ({}))
+                    throw new Error(result.error || `Kunne ikke hente kunstværker (${response.status}).`)
+                }
+                this.artworks = await response.json()
+            } catch (error) {
+                this.error = error.message
+            } finally {
+                this.loading = false
+            }
+        },
     },
 }
 </script>
@@ -47,6 +60,12 @@ export default {
         <input type="text" v-model="search">
     </div>
 
+    <RouterLink class="manage-artworks" to="/kunstvaerker">Administrér kunstværker</RouterLink>
+
+    <p v-if="loading" class="status" aria-live="polite">Indlæser kunstværker...</p>
+    <p v-else-if="error" class="status error" role="alert">{{ error }}</p>
+    <p v-else-if="filteredExhibitions.length === 0" class="status">Ingen kunstværker matcher søgningen.</p>
+
     <div class="grid">
         <!-- Makes one card for each exhibition in the list (:key = the id) -->
         <!-- title and image are sent to the card as props -->
@@ -54,8 +73,8 @@ export default {
             v-for="exhibition in filteredExhibitions"
             :key="exhibition.id"
             :title="exhibition.title"
-            :image="exhibition.image"
-            :to="exhibition.to"
+            :image="exhibition.image_url"
+            :to="`/kunstvaerk/${exhibition.id}`"
         />
     </div>
 </template>
@@ -84,6 +103,20 @@ export default {
         outline:none;
         background:url('@/components/Images/icons/search-icon.png') no-repeat right 8px center; /* The icon is a background image on the right */
         background-size:18px;
+    }
+
+    .manage-artworks{
+        display:inline-block;
+        margin:0 var(--headerPadding) var(--headerPadding);
+        color:inherit;
+    }
+
+    .status{
+        padding:0 var(--headerPadding);
+    }
+
+    .error{
+        color:#a00000;
     }
 
     .grid{
