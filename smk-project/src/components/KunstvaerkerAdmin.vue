@@ -4,20 +4,24 @@ export default {
     data() {
         return {
             artworks: [],
+            artists: [],
+            categories: [],
             loading: true,
             saving: false,
             error: '',
+            editingId: null,
             form: this.emptyForm(),
         }
     },
     mounted() {
-        this.loadArtworks()
+        this.loadData()
     },
     methods: {
         emptyForm() {
             return {
                 title: '',
-                artist: '',
+                artist_id: '',
+                category_id: '',
                 artwork_year: '',
                 description: '',
                 image_url: '',
@@ -37,27 +41,55 @@ export default {
             }
             return response.status === 204 ? null : response.json()
         },
-        async loadArtworks() {
+        async loadData() {
             this.loading = true
             this.error = ''
             try {
-                this.artworks = await this.request('/api/kunstvaerker')
+                const [artworks, artists, categories] = await Promise.all([
+                    this.request('/api/kunstvaerker'),
+                    this.request('/api/kunstnere'),
+                    this.request('/api/kategorier'),
+                ])
+                this.artworks = artworks
+                this.artists = artists
+                this.categories = categories
             } catch (error) {
                 this.error = error.message
             } finally {
                 this.loading = false
             }
         },
-        async addArtwork() {
+        editArtwork(artwork) {
+            this.editingId = artwork.id
+            this.form = {
+                title: artwork.title,
+                artist_id: artwork.artist_id,
+                category_id: artwork.category_id,
+                artwork_year: artwork.artwork_year ?? '',
+                description: artwork.description ?? '',
+                image_url: artwork.image_url ?? '',
+            }
+            this.error = ''
+        },
+        cancelEdit() {
+            this.editingId = null
+            this.form = this.emptyForm()
+            this.error = ''
+        },
+        async saveArtwork() {
             this.saving = true
             this.error = ''
             try {
-                await this.request('/api/kunstvaerker', {
-                    method: 'POST',
+                const isEditing = this.editingId !== null
+                const path = isEditing
+                    ? `/api/kunstvaerker/${this.editingId}`
+                    : '/api/kunstvaerker'
+                await this.request(path, {
+                    method: isEditing ? 'PUT' : 'POST',
                     body: JSON.stringify(this.form),
                 })
-                this.form = this.emptyForm()
-                await this.loadArtworks()
+                this.cancelEdit()
+                await this.loadData()
             } catch (error) {
                 this.error = error.message
             } finally {
@@ -71,6 +103,9 @@ export default {
             this.error = ''
             try {
                 await this.request(`/api/kunstvaerker/${artwork.id}`, { method: 'DELETE' })
+                if (this.editingId === artwork.id) {
+                    this.cancelEdit()
+                }
                 this.artworks = this.artworks.filter((item) => item.id !== artwork.id)
             } catch (error) {
                 this.error = error.message
@@ -83,17 +118,35 @@ export default {
 <template>
     <main class="artwork-admin">
         <h1>Kunstværker</h1>
-        <p>Se, tilføj og slet kunstværker i samlingen.</p>
+        <p>Se, tilføj, redigér og slet kunstværker i samlingen.</p>
 
-        <form class="artwork-form" @submit.prevent="addArtwork">
-            <h2>Tilføj kunstværk</h2>
+        <form class="artwork-form" @submit.prevent="saveArtwork">
+            <h2>{{ editingId === null ? 'Tilføj kunstværk' : 'Redigér kunstværk' }}</h2>
             <label>
                 Titel *
                 <input v-model.trim="form.title" type="text" maxlength="255" required>
             </label>
             <label>
-                Kunstner
-                <input v-model.trim="form.artist" type="text" maxlength="255">
+                Kunstner *
+                <select v-model.number="form.artist_id" required>
+                    <option disabled value="">Vælg en kunstner</option>
+                    <option v-for="artist in artists" :key="artist.artist_id" :value="artist.artist_id">
+                        {{ artist.name }}
+                    </option>
+                </select>
+            </label>
+            <label>
+                Kategori *
+                <select v-model.number="form.category_id" required>
+                    <option disabled value="">Vælg en kategori</option>
+                    <option
+                        v-for="category in categories"
+                        :key="category.category_id"
+                        :value="category.category_id"
+                    >
+                        {{ category.name }}
+                    </option>
+                </select>
             </label>
             <label>
                 Årstal
@@ -107,9 +160,14 @@ export default {
                 Beskrivelse
                 <textarea v-model.trim="form.description" maxlength="5000" rows="4"></textarea>
             </label>
-            <button type="submit" :disabled="saving">
-                {{ saving ? 'Gemmer...' : 'Tilføj kunstværk' }}
-            </button>
+            <div class="form-actions">
+                <button type="submit" :disabled="saving || loading">
+                    {{ saving ? 'Gemmer...' : editingId === null ? 'Tilføj kunstværk' : 'Gem ændringer' }}
+                </button>
+                <button v-if="editingId !== null" type="button" @click="cancelEdit">
+                    Annullér
+                </button>
+            </div>
         </form>
 
         <p v-if="error" class="message error" role="alert">{{ error }}</p>
@@ -122,12 +180,16 @@ export default {
                 <div class="artwork-details">
                     <h2>{{ artwork.title }}</h2>
                     <p v-if="artwork.artist">{{ artwork.artist }}</p>
-                    <p v-if="artwork.artwork_year">{{ artwork.artwork_year }}</p>
+                    <p v-if="artwork.category">{{ artwork.category }}</p>
+                    <p v-if="artwork.artwork_year != null">{{ artwork.artwork_year }}</p>
                     <p v-if="artwork.description">{{ artwork.description }}</p>
                 </div>
-                <button class="delete-button" type="button" @click="deleteArtwork(artwork)">
-                    Slet
-                </button>
+                <div class="item-actions">
+                    <button type="button" @click="editArtwork(artwork)">Redigér</button>
+                    <button class="delete-button" type="button" @click="deleteArtwork(artwork)">
+                        Slet
+                    </button>
+                </div>
             </li>
         </ul>
     </main>
@@ -158,11 +220,14 @@ h1,
 }
 
 .artwork-form input,
+.artwork-form select,
 .artwork-form textarea {
     box-sizing: border-box;
     width: 100%;
+    min-height: 40px;
     padding: 8px;
     border: 1px solid black;
+    background: white;
     font: inherit;
 }
 
@@ -178,6 +243,13 @@ button {
 button:disabled {
     cursor: wait;
     opacity: 0.6;
+}
+
+.form-actions,
+.item-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
 }
 
 .artwork-list {
@@ -212,6 +284,10 @@ button:disabled {
     overflow-wrap: anywhere;
 }
 
+.item-actions {
+    flex-direction: column;
+}
+
 .delete-button {
     flex: 0 0 auto;
 }
@@ -229,7 +305,8 @@ button:disabled {
         flex-wrap: wrap;
     }
 
-    .delete-button {
+    .item-actions {
+        flex-direction: row;
         margin-left: auto;
     }
 }

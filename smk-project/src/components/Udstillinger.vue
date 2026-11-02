@@ -11,6 +11,8 @@ export default {
         return {
             search: '', // What the user types in the search field
             artworks: [],
+            categories: [],
+            selectedCategoryId: '',
             loading: true,
             error: '',
         }
@@ -24,9 +26,12 @@ export default {
             // filter = keeps the exhibitions where the answer is true
             // includes = checks if the title contains the search text
             // toLowerCase = makes everything small letters, so it works with both big and small letters
-            return this.artworks.filter(exhibition =>
-                exhibition.title.toLowerCase().includes(this.search.toLowerCase())
-            );
+            return this.artworks.filter((exhibition) => {
+                const matchesSearch = exhibition.title.toLowerCase().includes(this.search.toLowerCase())
+                const matchesCategory = !this.selectedCategoryId
+                    || exhibition.category_id === Number(this.selectedCategoryId)
+                return matchesSearch && matchesCategory
+            })
         }
     },
     methods: {
@@ -34,12 +39,23 @@ export default {
             this.loading = true
             this.error = ''
             try {
-                const response = await fetch('/api/kunstvaerker')
-                if (!response.ok) {
-                    const result = await response.json().catch(() => ({}))
-                    throw new Error(result.error || `Kunne ikke hente kunstværker (${response.status}).`)
+                const [artworksResponse, categoriesResponse] = await Promise.all([
+                    fetch('/api/kunstvaerker'),
+                    fetch('/api/kategorier'),
+                ])
+                for (const [response, label] of [
+                    [artworksResponse, 'kunstværker'],
+                    [categoriesResponse, 'kategorier'],
+                ]) {
+                    if (!response.ok) {
+                        const result = await response.json().catch(() => ({}))
+                        throw new Error(result.error || `Kunne ikke hente ${label} (${response.status}).`)
+                    }
                 }
-                this.artworks = await response.json()
+                ;[this.artworks, this.categories] = await Promise.all([
+                    artworksResponse.json(),
+                    categoriesResponse.json(),
+                ])
             } catch (error) {
                 this.error = error.message
             } finally {
@@ -59,6 +75,20 @@ export default {
         <!-- v-model saves what is typed in 'search' -->
         <input type="text" v-model="search">
     </div>
+
+    <label class="category-filter">
+        Filtrér efter kategori
+        <select v-model="selectedCategoryId">
+            <option value="">Alle kategorier</option>
+            <option
+                v-for="category in categories"
+                :key="category.category_id"
+                :value="String(category.category_id)"
+            >
+                {{ category.name }}
+            </option>
+        </select>
+    </label>
 
     <RouterLink class="manage-artworks" to="/kunstvaerker">Administrér kunstværker</RouterLink>
 
@@ -109,6 +139,22 @@ export default {
         display:inline-block;
         margin:0 var(--headerPadding) var(--headerPadding);
         color:inherit;
+    }
+
+    .category-filter{
+        display:flex;
+        align-items:center;
+        flex-wrap:wrap;
+        gap:8px;
+        padding:0 var(--headerPadding) var(--headerPadding);
+    }
+
+    .category-filter select{
+        min-height:36px;
+        padding:6px;
+        border:2px solid black;
+        background:white;
+        font:inherit;
     }
 
     .status{

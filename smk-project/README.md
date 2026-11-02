@@ -39,22 +39,25 @@ npm run build
 
 ## MySQL og API
 
-Projektet bruger en lokal MySQL-server. Opret databasen og tabellen fra projektmappen:
-
-```sh
-mysql -u root -p < database/schema.sql
-```
-
-Indsæt projektets fire eksisterende værker (kommandoen kan køres igen uden at lave dubletter):
-
-```sh
-mysql -u root -p smk_project < database/seed.sql
-```
-
-Kopiér `.env.example` til `.env`, og ret databasebruger, adgangskode og eventuelt port, så de passer til din MySQL-installation:
+Kopiér `.env.example` til `.env`, og indstil databasebruger, adgangskode og eventuelt port:
 
 ```sh
 cp .env.example .env
+```
+
+For en eksisterende installation med den gamle `artworks`-tabel skal du køre migrationen:
+
+```sh
+npm run migrate
+```
+
+Migrationen tager først en `mysqldump`-backup i `database/backups/`, bevarer værkernes ID'er og eksisterende oplysninger og flytter kunstnernavne til den normaliserede tabel. De eksisterende billeder og værker slettes ikke. Backupmappen er lokal og ignoreres af Git.
+
+For en ny database oprettes skemaet og eksempeldata sådan:
+
+```sh
+mysql -u root -p < database/schema.sql
+mysql -u root -p smk_project < database/seed.sql
 ```
 
 Start API'et i en terminal:
@@ -69,10 +72,13 @@ API'et lytter som standard på `http://localhost:3001`. Tilgængelige stier:
 | --- | --- | --- |
 | `GET` | `/api/kunstvaerker` | Se alle kunstværker |
 | `GET` | `/api/kunstvaerker/:id` | Se ét kunstværk |
+| `GET` | `/api/kunstnere` | Se kunstnere |
+| `GET` | `/api/kategorier` | Se kategorier |
 | `POST` | `/api/kunstvaerker` | Tilføj et kunstværk |
+| `PUT` | `/api/kunstvaerker/:id` | Redigér et kunstværk |
 | `DELETE` | `/api/kunstvaerker/:id` | Slet et kunstværk |
 
-`POST` accepterer JSON med `title` (påkrævet), `artist`, `artwork_year`, `description` og `image_url`.
+`POST` og `PUT` accepterer JSON med `title`, `artist_id`, `category_id`, `artwork_year`, `description` og `image_url`. Titel, kunstner og kategori er påkrævet; øvrige oplysninger kan udelades.
 
 ## Vue-appen
 
@@ -82,4 +88,4 @@ Start udviklingsserveren i en anden terminal:
 npm run dev
 ```
 
-Kunstværkerne på `/listeafvaerker` og detaljesiderne på `/kunstvaerk/:id` hentes fra databasen. Administrationssiden findes på `/kunstvaerker` og kan også åbnes via linket på siden med udstillinger. Vite videresender `/api`-kald til API'et på port 3001.
+Kunstværkerne på `/listeafvaerker` og detaljesiderne på `/kunstvaerk/:id` hentes fra databasen. Oversigtssiden henter også kategorier fra API'et og kan filtrere efter kategori. Administrationssiden findes på `/kunstvaerker` og understøtter oprettelse, redigering, sletning og valg af kunstner/kategori. Vite videresender `/api`-kald til API'et på port 3001.

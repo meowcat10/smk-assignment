@@ -24,7 +24,8 @@ function parseId(value) {
 function validateArtwork(body) {
     const artwork = {
         title: typeof body.title === 'string' ? body.title.trim() : '',
-        artist: typeof body.artist === 'string' ? body.artist.trim() : '',
+        artist_id: parseId(body.artist_id),
+        category_id: parseId(body.category_id),
         artwork_year: body.artwork_year === '' || body.artwork_year == null
             ? null
             : Number(body.artwork_year),
@@ -35,8 +36,11 @@ function validateArtwork(body) {
     if (!artwork.title || artwork.title.length > 255) {
         return { error: 'Titel er påkrævet og må højst være 255 tegn.' }
     }
-    if (artwork.artist.length > 255) {
-        return { error: 'Kunstnerens navn må højst være 255 tegn.' }
+    if (!artwork.artist_id) {
+        return { error: 'Vælg en kunstner.' }
+    }
+    if (!artwork.category_id) {
+        return { error: 'Vælg en kategori.' }
     }
     if (artwork.artwork_year !== null
         && (!Number.isInteger(artwork.artwork_year) || artwork.artwork_year < 0 || artwork.artwork_year > 3000)) {
@@ -62,11 +66,66 @@ function validateArtwork(body) {
     return { artwork }
 }
 
-app.get('/api/kunstvaerker', async (request, response, next) => {
+const artworkSelect = `
+    SELECT
+        artworks.artwork_id AS id,
+        artworks.title,
+        artworks.artist_id,
+        artists.name AS artist,
+        artworks.category_id,
+        categories.name AS category,
+        artworks.artwork_year,
+        artworks.description,
+        artworks.image_url,
+        artworks.created_at
+    FROM artworks
+    LEFT JOIN artists ON artists.artist_id = artworks.artist_id
+    LEFT JOIN categories ON categories.category_id = artworks.category_id
+`
+
+async function getArtworkById(id) {
+    const [rows] = await pool.execute(`${artworkSelect} WHERE artworks.artwork_id = ?`, [id])
+    return rows[0]
+}
+
+app.get('/api/kunstnere', async (request, response, next) => {
     try {
         const [rows] = await pool.query(
-            'SELECT id, title, artist, artwork_year, description, image_url, created_at FROM artworks ORDER BY created_at DESC, id DESC',
+            'SELECT artist_id, name FROM artists ORDER BY name',
         )
+        response.json(rows)
+    } catch (error) {
+        next(error)
+    }
+})
+
+app.get('/api/kategorier', async (request, response, next) => {
+    try {
+        const [rows] = await pool.query(
+            'SELECT category_id, name FROM categories ORDER BY name',
+        )
+        response.json(rows)
+    } catch (error) {
+        next(error)
+    }
+})
+
+app.get('/api/kunstvaerker', async (request, response, next) => {
+    try {
+        const categoryId = request.query.category_id
+            ? parseId(request.query.category_id)
+            : null
+        if (request.query.category_id && !categoryId) {
+            return response.status(400).json({ error: 'Ugyldigt kategori-id.' })
+        }
+        const [rows] = categoryId
+            ? await pool.execute(
+                `${artworkSelect} WHERE artworks.category_id = ? ORDER BY artworks.created_at DESC, artworks.artwork_id DESC`,
+                [categoryId],
+            )
+            : await pool.query(
+                `${artworkSelect} ORDER BY artworks.created_at DESC, artworks.artwork_id DESC`,
+            )
         response.json(rows)
     } catch (error) {
         next(error)
@@ -80,14 +139,11 @@ app.get('/api/kunstvaerker/:id', async (request, response, next) => {
     }
 
     try {
-        const [rows] = await pool.execute(
-            'SELECT id, title, artist, artwork_year, description, image_url, created_at FROM artworks WHERE id = ?',
-            [id],
-        )
-        if (rows.length === 0) {
+        const artwork = await getArtworkById(id)
+        if (!artwork) {
             return response.status(404).json({ error: 'Kunstværket blev ikke fundet.' })
         }
-        response.json(rows[0])
+        response.json(artwork)
     } catch (error) {
         next(error)
     }
@@ -100,21 +156,71 @@ app.post('/api/kunstvaerker', async (request, response, next) => {
     }
 
     try {
+        const [artists] = await pool.execute('SELECT artist_id FROM artists WHERE artist_id = ?', [artwork.artist_id])
+        const [categories] = await pool.execute(
+            'SELECT category_id FROM categories WHERE category_id = ?',
+            [artwork.category_id],
+        )
+        if (!artists.length || !categories.length) {
+            return response.status(400).json({ error: 'Den valgte kunstner eller kategori findes ikke.' })
+        }
         const [result] = await pool.execute(
-            'INSERT INTO artworks (title, artist, artwork_year, description, image_url) VALUES (?, ?, ?, ?, ?)',
+            'INSERT INTO artworks (title, artist_id, category_id, artwork_year, description, image_url) VALUES (?, ?, ?, ?, ?, ?)',
             [
                 artwork.title,
-                artwork.artist || null,
+                artwork.artist_id,
+                artwork.category_id,
                 artwork.artwork_year,
                 artwork.description || null,
                 artwork.image_url || null,
             ],
         )
-        const [rows] = await pool.execute(
-            'SELECT id, title, artist, artwork_year, description, image_url, created_at FROM artworks WHERE id = ?',
-            [result.insertId],
+        response.status(201).json(await getArtworkById(result.insertId))
+    } catch (error) {
+        next(error)
+    }
+})
+
+app.put('/api/kunstvaerker/:id', async (request, response, next) => {
+    const id = parseId(request.params.id)
+    if (!id) {
+        return response.status(400).json({ error: 'Ugyldigt kunstværks-id.' })
+    }
+    const { artwork, error } = validateArtwork(request.body ?? {})
+    if (error) {
+        return response.status(400).json({ error })
+    }
+
+    try {
+        const [artists] = await pool.execute('SELECT artist_id FROM artists WHERE artist_id = ?', [artwork.artist_id])
+        const [categories] = await pool.execute(
+            'SELECT category_id FROM categories WHERE category_id = ?',
+            [artwork.category_id],
         )
-        response.status(201).json(rows[0])
+        if (!artists.length || !categories.length) {
+            return response.status(400).json({ error: 'Den valgte kunstner eller kategori findes ikke.' })
+        }
+        const [result] = await pool.execute(
+            `UPDATE artworks
+             SET title = ?, artist_id = ?, category_id = ?, artwork_year = ?, description = ?, image_url = ?
+             WHERE artwork_id = ?`,
+            [
+                artwork.title,
+                artwork.artist_id,
+                artwork.category_id,
+                artwork.artwork_year,
+                artwork.description || null,
+                artwork.image_url || null,
+                id,
+            ],
+        )
+        if (result.affectedRows === 0) {
+            const existing = await getArtworkById(id)
+            if (!existing) {
+                return response.status(404).json({ error: 'Kunstværket blev ikke fundet.' })
+            }
+        }
+        response.json(await getArtworkById(id))
     } catch (error) {
         next(error)
     }
@@ -127,7 +233,7 @@ app.delete('/api/kunstvaerker/:id', async (request, response, next) => {
     }
 
     try {
-        const [result] = await pool.execute('DELETE FROM artworks WHERE id = ?', [id])
+        const [result] = await pool.execute('DELETE FROM artworks WHERE artwork_id = ?', [id])
         if (result.affectedRows === 0) {
             return response.status(404).json({ error: 'Kunstværket blev ikke fundet.' })
         }

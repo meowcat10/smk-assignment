@@ -111,6 +111,7 @@ export default {
                 <img v-if="artwork.image_url" :src="artwork.image_url" :alt="artwork.title">
                 <h2 class="artwork-subtitle">Mere om {{ artwork.title }}</h2>
                 <p v-if="artwork.artist" class="artwork-artist">{{ artwork.artist }}</p>
+                <p v-if="artwork.category" class="artwork-category">{{ artwork.category }}</p>
                 <p v-if="artwork.artwork_year" class="artwork-year">Årstal: {{ artwork.artwork_year }}</p>
                 <p v-if="artwork.description" class="artwork-description">{{ artwork.description }}</p>
             </section>
@@ -176,6 +177,7 @@ export default {
 }
 
 .artwork-artist,
+.artwork-category,
 .artwork-description {
     width: min(350px, 100%);
     font-size: 18px;
