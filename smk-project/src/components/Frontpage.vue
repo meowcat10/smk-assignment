@@ -50,7 +50,8 @@ export default {
 <style scoped>
     .pageContent{
         width:100%;
-        height:100%;
+        min-height:calc(100dvh - var(--headerHeight) - var(--buttonHeight_menu) - var(--buttonPadding) - var(--buttonPadding));
+        box-sizing:border-box;
         display:flex;
         justify-content: center;
         align-items: center;

@@ -29,11 +29,11 @@
       <retning class="retning"><img src="./Images/icons/mappoint.svg"><p>Du er nu ankommet til rum 211</p></retning>
 
       <button
-      class="navbutton"><img src="./Images/icons/mappointthin.svg">Start navigation</button>
+      class="navbutton"><span class="navbutton-content"><img src="./Images/icons/mappointthin.svg"><span>Start navigation</span></span></button>
       
     </template>
 
-    <style>
+    <style scoped>
     .retning {
         margin-top: 20px;
         width: 300px;
@@ -49,17 +49,39 @@
     }
 
     .navbutton {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-sizing: border-box;
         cursor: pointer;
         margin-top: 20px;
-        border: 4px;
-        border-style: solid;
-        border-color: black;
+        border: 4px solid black;
         width: 300px;
         height: 50px;
         background-color: transparent;
         font-weight: 600;
         font-size: 24px;
         margin-bottom: 20px;
+    }
+
+    .navbutton img {
+        width: 30px;
+        height: 30px;
+    }
+
+    .navbutton-content {
+        display: grid;
+        grid-template-columns: 30px max-content;
+        align-items: center;
+        justify-content: center;
+        column-gap: 6px;
+        width: 100%;
+        white-space: nowrap;
+    }
+
+    .navbutton img {
+        width: 30px;
+        height: 30px;
     }
     
     </style>

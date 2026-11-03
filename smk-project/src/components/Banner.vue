@@ -34,6 +34,7 @@
         display:flex;
         align-items: end;
         width:100%;
+        box-sizing:border-box;
         padding:var(--headerPadding);
         height:var(--headerHeight);
     }

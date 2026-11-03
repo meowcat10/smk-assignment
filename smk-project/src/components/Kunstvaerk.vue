@@ -137,7 +137,7 @@ export default {
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 16px;
+    gap: 8px;
     width: 100%;
 }
 
